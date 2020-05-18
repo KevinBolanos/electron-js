@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .card {
+        width: 200px;
+    }
+    .card-header{
+        background-color: #45a29e !important;
+    }
+    body {
+        background-color: #c5c6c7 !important;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Productos en Electron</title>
+    <link rel="Stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+</head>
+<body>
+    
+    <div class="container p-4">
+        <div id="productos" class="row"></div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        const productos = document.querySelector('#productos');
+        
+        ipcRenderer.on('new-product', (e, newProduct) => {
+            console.log(newProduct);
+            
+            const newProductTemplate = `
+            <div class="col-xs-4 p-2">
+            <div class="card text-center bg-secondary">
+                <div class="card-header">
+                    <h5 class="card-tittle">${newProduct.name}</h5>
+                </div>
+                <div class="card-body">
+                    \$${newProduct.price}
+                    <hr/>
+                    ${newProduct.description}
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-danger btn-sm">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+            </div>
+            `;
+            productos.innerHTML += newProductTemplate;
+
+            const btns = document.querySelectorAll('.btn.btn-danger');
+            btns.forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.target.parentElement.parentElement.parentElement.remove();
+                });
+            });
+        });
+
+        ipcRenderer.on('products-remove-all', (e) => {
+            productos.innerHTML = '';
+        });
+        
+    </script>
+
+</body>
+</html>

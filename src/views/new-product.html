@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+    body {
+        background-color: #c5c6c7 !important;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Añadir un Producto Nuevo</title>
+    <link rel="Stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+</head>
+<body>
+    
+    <form class="p-4">
+        <div class="form-group">
+            <input id="nombre" class="form-control" placeholder="Nombre del Producto" type="text" autofocus>
+        </div>
+        <div class="form-group">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                </div>
+                <input id="precio" class="form-control" placeholder="Precio" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <input id="descripcion" class="form-control" placeholder="Descripción" type="text">
+        </div>
+        <button class="btn btn-primary btn-block">
+            Guardar Producto
+        </button>
+    </form>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+    
+        const form = document.querySelector('form');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            const name = document.querySelector('#nombre').value;
+            const price = document.querySelector('#precio').value;
+            const desc = document.querySelector('#descripcion').value;
+            console.log("nombre: ", name, "\nprecio: ", price, "\ndescripción: ", desc);
+        
+            const newProduct = {
+                name: name,
+                price: price,
+                description: desc
+            };
+
+            ipcRenderer.send('new-product', newProduct);
+
+        });
+    
+    </script>
+</body>
+</html>
